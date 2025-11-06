@@ -1,6 +1,6 @@
 # 🤖 Clasificador Automático de RAEE: Análisis de Regresión para la Evaluación de Proyectos
 
-Este repositorio contiene la aplicación interactiva utilizada en el **Estudio de Mercado y Proyección Financiera** del proyecto "Clasificador Automático de Residuos de Aparatos Eléctricos y Electrónicos (RAEE)", siguiendo la metodología de **Gabriel Baca Urbina**.
+Este repositorio contiene la aplicación interactiva utilizada en el **Estudio de Mercado y Proyección Financiera** del proyecto "Clasificador Automático de Residuos de Aparatos Eléctricos y Electrónicos (RAEE)", siguiendo la metodología de **Gabriel Baca Urbina** en su obra "Evaluación de Proyectos".
 
 La aplicación permite realizar un **Análisis de Regresión Lineal Simple** en tiempo real para determinar qué variable macroeconómica (Inflación, PIB, IPC) es el mejor predictor del precio de venta (Oferta y Demanda) del Clasificador RAEE, basándose en el coeficiente de determinación ($\mathbf{R^2}$).
 
@@ -21,10 +21,11 @@ El modelo con el $\mathbf{R^2}$ más alto será el que se utilice para la proyec
 
 ## 🚀 Aplicación Interactiva (Demo)
 
-El archivo principal (`regresion_unificada.html`) contiene toda la aplicación, incluyendo el CSS y JavaScript embebido.
+El archivo principal (`regresion_raee.html`) contiene toda la aplicación, incluyendo el CSS y JavaScript embebido.
 
 ### 🔗 Enlace a la Aplicación
-[Inserta aquí el enlace de GitHub Pages: `https://[su-nombre-de-usuario].github.io/[nombre-del-repositorio]/regresion_unificada.html`]
+
+`https://renders3d.github.io/analisis-regresion-raee/regresion_raee`
 
 ### ⚙️ Instrucciones de Uso
 
@@ -46,7 +47,7 @@ El archivo principal (`regresion_unificada.html`) contiene toda la aplicación, 
 
 El proyecto está diseñado para la máxima portabilidad:
 
-* **`regresion_unificada.html`:** Contiene toda la lógica (HTML, CSS y JavaScript).
+* **`regresion_raee.html`:** Contiene toda la lógica (HTML, CSS y JavaScript).
 * **JavaScript:** Incluye funciones para el cálculo de la Regresión Lineal (mínimos cuadrados), la pendiente ($b$), la ordenada ($a$), y el $R^2$.
 * **Librería de Gráficos:** Utiliza la librería **Chart.js** (cargada vía CDN) para renderizar las 6 gráficas de dispersión de manera dinámica.
 
