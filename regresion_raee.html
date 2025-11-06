@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Regresión Automática Unificada</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <style>
+        /* [El CSS es idéntico al anterior, se omite por brevedad] */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        p {
+            text-align: center;
+            color: #7f8c8d;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1500px;
+            margin: 20px auto;
+        }
+        .controls {
+            width: 35%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 85vh;
+        }
+        .charts {
+            width: 65%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .chart-box {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .control-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .control-group h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+        .control-group label {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        textarea {
+            width: 95%;
+            resize: vertical;
+            min-height: 50px;
+            padding: 5px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .global-x-input {
+            background-color: #ecf0f1;
+            border: 2px solid #3498db;
+        }
+        .results {
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+        .r2-display {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .equation-display {
+            font-family: monospace;
+            background-color: #f7f7f7;
+            padding: 5px;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Análisis de Regresión Automática para Pronóstico de Precios</h1>
+<p>La variable X (Valores Macroeconómicos/Períodos) es la misma para todas las seis regresiones. Los precios (Y) se ingresan por separado.</p>
+
+<div class="container">
+    
+    <div class="controls">
+        
+        <div class="control-group global-x-input">
+            <h3>VALORES X (GLOBAL - Aplica a las 6 gráficas)</h3>
+            <label>Valores X (e.g., Inflación %, Crecimiento PIB %, o Períodos 1, 2, 3...):</label>
+            <textarea id="x-global" oninput="updateCharts()">1, 2, 3, 4, 5, 6</textarea>
+        </div>
+
+        <h2>Ingreso de Precios (Valores Y)</h2>
+
+        <div class="control-group" id="controls-inflacion-demanda">
+            <h3>1. Demanda (X = Inflación vs. Precio)</h3>
+            <label>Valores Y (Precio $):</label>
+            <textarea id="y-inflacion-demanda" oninput="updateCharts()">12000, 13500, 15000, 16500, 18000, 20000</textarea>
+            <div class="results">
+                <div class="r2-display">R²: <span id="r2-inflacion-demanda">...</span></div>
+                <div class="equation-display" id="eq-inflacion-demanda">P = ...</div>
+            </div>
+        </div>
+
+        <div class="control-group" id="controls-inflacion-oferta">
+            <h3>2. Oferta (X = Inflación vs. Precio)</h3>
+            <label>Valores Y (Precio $):</label>
+            <textarea id="y-inflacion-oferta" oninput="updateCharts()">11000, 13000, 15500, 18000, 20500, 23000</textarea>
+            <div class="results">
+                <div class="r2-display">R²: <span id="r2-inflacion-oferta">...</span></div>
+                <div class="equation-display" id="eq-inflacion-oferta">P = ...</div>
+            </div>
+        </div>
+
+        <div class="control-group" id="controls-pib-demanda">
+            <h3>3. Demanda (X = PIB vs. Precio)</h3>
+            <label>Valores Y (Precio $):</label>
+            <textarea id="y-pib-demanda" oninput="updateCharts()">14000, 16000, 18500, 20500, 22000, 24000</textarea>
+            <div class="results">
+                <div class="r2-display">R²: <span id="r2-pib-demanda">...</span></div>
+                <div class="equation-display" id="eq-pib-demanda">P = ...</div>
+            </div>
+        </div>
+
+        <div class="control-group" id="controls-pib-oferta">
+            <h3>4. Oferta (X = PIB vs. Precio)</h3>
+            <label>Valores Y (Precio $):</label>
+            <textarea id="y-pib-oferta" oninput="updateCharts()">18000, 17500, 17000, 16500, 16000, 15500</textarea>
+            <div class="results">
+                <div class="r2-display">R²: <span id="r2-pib-oferta">...</span></div>
+                <div class="equation-display" id="eq-pib-oferta">P = ...</div>
+            </div>
+        </div>
+
+        <div class="control-group" id="controls-ipc-demanda">
+            <h3>5. Demanda (X = IPC vs. Precio)</h3>
+            <label>Valores Y (Precio $):</label>
+            <textarea id="y-ipc-demanda" oninput="updateCharts()">13000, 14500, 17000, 19500, 21000, 23500</textarea>
+            <div class="results">
+                <div class="r2-display">R²: <span id="r2-ipc-demanda">...</span></div>
+                <div class="equation-display" id="eq-ipc-demanda">P = ...</div>
+            </div>
+        </div>
+
+        <div class="control-group" id="controls-ipc-oferta">
+            <h3>6. Oferta (X = IPC vs. Precio)</h3>
+            <label>Valores Y (Precio $):</label>
+            <textarea id="y-ipc-oferta" oninput="updateCharts()">11500, 14000, 17500, 20000, 22500, 24000</textarea>
+            <div class="results">
+                <div class="r2-display">R²: <span id="r2-ipc-oferta">...</span></div>
+                <div class="equation-display" id="eq-ipc-oferta">P = ...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="charts">
+        <div class="chart-box"><canvas id="chart-inflacion-demanda"></canvas></div>
+        <div class="chart-box"><canvas id="chart-inflacion-oferta"></canvas></div>
+        <div class="chart-box"><canvas id="chart-pib-demanda"></canvas></div>
+        <div class="chart-box"><canvas id="chart-pib-oferta"></canvas></div>
+        <div class="chart-box"><canvas id="chart-ipc-demanda"></canvas></div>
+        <div class="chart-box"><canvas id="chart-ipc-oferta"></canvas></div>
+    </div>
+</div>
+<div>
+    <p>
+        Universidad Nacional Abierta | Ingeniería de Sistemas (236) | Evaluación de Proyectos (225) | Lapso Académico 2025-2 <br>
+        Carlos L. Noriega M. | V-15.395.087 | Centro Local Metropolitano
+    </p>
+</div>
+
+<script>
+    const MODEL_KEYS = ['inflacion-demanda', 'inflacion-oferta', 'pib-demanda', 'pib-oferta', 'ipc-demanda', 'ipc-oferta'];
+    let charts = {};
+
+    const TITLES = {
+        'inflacion-demanda': '1. Demanda (Inflación vs. Precio)',
+        'inflacion-oferta': '2. Oferta (Inflación vs. Precio)',
+        'pib-demanda': '3. Demanda (PIB vs. Precio)',
+        'pib-oferta': '4. Oferta (PIB vs. Precio)',
+        'ipc-demanda': '5. Demanda (IPC vs. Precio)',
+        'ipc-oferta': '6. Oferta (IPC vs. Precio)'
+    };
+    
+    const AXIS_LABELS = {
+        'inflacion': 'Inflación (%)',
+        'pib': 'PIB (%)',
+        'ipc': 'IPC (%)',
+        'precio': 'Precio ($ USD)'
+    };
+
+    // --- 1. FUNCIÓN DE CÁLCULO DE REGRESIÓN (a, b) y R² ---
+    function calculateRegression(xData, yData) {
+        const n = xData.length;
+        if (n < 2 || n !== yData.length) {
+            return { a: 0, b: 0, r2: 0, valid: false };
+        }
+
+        const sumX = xData.reduce((a, b) => a + b, 0);
+        const sumY = yData.reduce((a, b) => a + b, 0);
+        const sumXY = xData.map((x, i) => x * yData[i]).reduce((a, b) => a + b, 0);
+        const sumXX = xData.map(x => x * x).reduce((a, b) => a + b, 0);
+
+        const meanX = sumX / n;
+        const meanY = sumY / n;
+
+        // Cálculo de la Pendiente (b)
+        const numeratorB = sumXY - (sumX * sumY) / n;
+        const denominatorB = sumXX - (sumX * sumX) / n;
+
+        if (denominatorB === 0) {
+             return { a: meanY, b: 0, r2: 0, valid: true };
+        }
+
+        const b = numeratorB / denominatorB;
+        
+        // Cálculo de la Ordenada al origen (a)
+        const a = meanY - b * meanX;
+
+        // Cálculo de R²
+        let ssr = 0; // Sum of Squares of Regression (Explicada)
+        let sst = 0; // Total Sum of Squares (Total)
+
+        for (let i = 0; i < n; i++) {
+            const predictedY = a + b * xData[i];
+            ssr += Math.pow(predictedY - meanY, 2);
+            sst += Math.pow(yData[i] - meanY, 2);
+        }
+        
+        const r2 = sst === 0 ? 1 : ssr / sst;
+        
+        return { a, b, r2: Math.max(0, Math.min(1, r2)), valid: true };
+    }
+
+    // --- 2. FUNCIÓN DE PARSEO DE INPUTS ---
+    function parseInput(inputID) {
+        const input = document.getElementById(inputID).value;
+        // Limpia el input: reemplaza comas, espacios, saltos de línea y filtra números válidos
+        return input.split(/[\s,]+/) 
+                    .map(s => parseFloat(s.trim()))
+                    .filter(n => !isNaN(n));
+    }
+
+    // --- 3. FUNCIÓN DE INICIALIZACIÓN DE GRÁFICAS ---
+    function initializeCharts() {
+        MODEL_KEYS.forEach(key => {
+            const ctx = document.getElementById(`chart-${key}`).getContext('2d');
+            const xLabelKey = key.split('-')[0];
+            
+            charts[key] = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { 
+                            label: 'Datos Ingresados',
+                            data: [],
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        { 
+                            label: 'Línea de Regresión',
+                            data: [],
+                            borderColor: 'rgb(231, 76, 60)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0,
+                            type: 'line'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: { display: true, text: AXIS_LABELS[xLabelKey] }
+                        },
+                        y: {
+                            title: { display: true, text: AXIS_LABELS.precio }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: TITLES[key] }
+                    }
+                }
+            });
+        });
+        updateCharts(); // Llamada inicial para procesar datos por defecto
+    }
+
+    // --- 4. FUNCIÓN DE ACTUALIZACIÓN EN TIEMPO REAL ---
+    function updateCharts() {
+        const globalXData = parseInput('x-global');
+        
+        MODEL_KEYS.forEach(key => {
+            const yData = parseInput(`y-${key}`);
+            const chart = charts[key];
+            
+            // Validar que las cantidades X e Y sean iguales
+            if (globalXData.length === 0 || globalXData.length !== yData.length) {
+                chart.data.datasets[0].data = [];
+                chart.data.datasets[1].data = [];
+                chart.update();
+                document.getElementById(`r2-${key}`).textContent = 'ERROR (N ≠ M)';
+                document.getElementById(`eq-${key}`).textContent = 'P = Cantidades X e Y deben ser iguales';
+                return;
+            }
+
+            const results = calculateRegression(globalXData, yData);
+            
+            // 1. Preparar datos de dispersión
+            const scatterData = globalXData.map((x, i) => ({ x: x, y: yData[i] }));
+            chart.data.datasets[0].data = scatterData;
+
+            // 2. Preparar línea de regresión y resultados
+            if (results.valid && globalXData.length >= 2) {
+                const minX = Math.min(...globalXData);
+                const maxX = Math.max(...globalXData);
+                
+                // Aplicar redondeo a 3 decimales para a y b
+                const a_fixed = parseFloat(results.a.toFixed(1));
+                const b_fixed = parseFloat(results.b.toFixed(1));
+
+                // Calcular dos puntos para dibujar la línea
+                const lineData = [
+                    { x: minX, y: a_fixed + b_fixed * minX },
+                    { x: maxX, y: a_fixed + b_fixed * maxX }
+                ];
+                
+                // Ajustar ejes Y dinámicamente
+                const minY = Math.min(...yData, lineData[0].y, lineData[1].y) * 0.95;
+                const maxY = Math.max(...yData, lineData[0].y, lineData[1].y) * 1.05;
+                chart.options.scales.y.min = minY;
+                chart.options.scales.y.max = maxY;
+
+                // Actualizar gráfica
+                chart.data.datasets[1].data = lineData;
+                
+                // 3. Actualizar resultados en la interfaz con formato fijo
+                const sign = results.b >= 0 ? '+' : ''; 
+                document.getElementById(`r2-${key}`).textContent = results.r2.toFixed(4); // R² a 4 decimales para mayor precisión
+                document.getElementById(`eq-${key}`).textContent = `P = ${a_fixed.toFixed(3)} ${sign} ${b_fixed.toFixed(3)}X`;
+
+            } else {
+                // Datos insuficientes o inválidos
+                chart.data.datasets[1].data = [];
+                document.getElementById(`r2-${key}`).textContent = 'N/A';
+                document.getElementById(`eq-${key}`).textContent = 'P = Datos insuficientes';
+            }
+            
+            chart.update();
+        });
+    }
+
+    // Iniciar la aplicación cuando la página se carga
+    window.onload = initializeCharts;
+
+</script>
+
+</body>
+</html>
