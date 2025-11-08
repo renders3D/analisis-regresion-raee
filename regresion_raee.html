@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis de Regresión Automática (R²) </title>
+    <title>Análisis de Regresión: Agrupación Macro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     <style>
         body {
@@ -50,15 +50,26 @@
         .control-group {
             margin-bottom: 25px;
             padding: 15px;
-            border: 1px solid #ddd;
             border-radius: 6px;
         }
-        .control-group h3 {
+        .macro-input-group {
+            border: 2px solid #3498db;
+            margin-bottom: 30px;
+        }
+        .macro-input-group h3 {
+            background-color: #ecf0f1;
+            padding: 8px;
+            margin: -15px -15px 15px -15px;
+            border-bottom: 2px solid #3498db;
+            color: #34495e;
+            font-size: 1.2em;
+        }
+        .control-group h4 {
             margin-top: 0;
             font-size: 1.1em;
             color: #34495e;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 8px;
+            border-bottom: 1px dashed #ecf0f1;
+            padding-bottom: 5px;
         }
         .control-group label {
             display: block;
@@ -69,7 +80,7 @@
         textarea {
             width: 95%;
             resize: vertical;
-            min-height: 50px;
+            min-height: 40px;
             padding: 5px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -94,86 +105,92 @@
 </head>
 <body>
 
-<h1>Análisis de Regresión Automática para Pronóstico</h1>
-<p>Ingrese los valores de la variable macroeconómica (X) y el Precio (Y) separados por comas.</p>
+<h1>Análisis de Regresión para Pronóstico: Agrupación Macro</h1>
+<p>Ingrese los valores de la variable macroeconómica (X) una sola vez por categoría (Inflación, PIB, IPC) y los valores de Precio (Y) por separado.</p>
 
 <div class="container">
     
     <div class="controls">
-        <h2>Ingreso de Nubes de Puntos</h2>
+        
+        <h2>Entrada de Datos X (Macro) y Y (Precio)</h2>
 
-        <div class="control-group" id="controls-inflacion-demanda">
-            <h3>1. Demanda (Inflación vs. Precio)</h3>
+        <div class="macro-input-group" id="group-inflacion">
+            <h3>Inflación X (%)</h3>
             <label>Valores X (Inflación %):</label>
-            <textarea id="x-inflacion-demanda" oninput="updateCharts()">8, 10, 11.5, 11.6, 12, 12.2</textarea>
-            <label>Valores Y (Precio $):</label>
-            <textarea id="y-inflacion-demanda" oninput="updateCharts()">12000, 13500, 15000, 16500, 18000, 20000</textarea>
-            <div class="results">
-                <div class="r2-display">R²: <span id="r2-inflacion-demanda">...</span></div>
-                <div class="equation-display" id="eq-inflacion-demanda">P = ...</div>
+            <textarea id="x-inflacion" oninput="updateCharts()">10, 10.2, 10.3, 10.8, 11.2, 12</textarea>
+            
+            <div class="control-group">
+                <h4>1. Demanda (Inflación vs. Precio)</h4>
+                <label>Valores Y (Precio $):</label>
+                <textarea id="y-inflacion-demanda" oninput="updateCharts()">12000, 13500, 15000, 16500, 18000, 20000</textarea>
+                <div class="results">
+                    <div class="r2-display">R²: <span id="r2-inflacion-demanda">...</span></div>
+                    <div class="equation-display" id="eq-inflacion-demanda">P = ...</div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h4>2. Oferta (Inflación vs. Precio)</h4>
+                <label>Valores Y (Precio $):</label>
+                <textarea id="y-inflacion-oferta" oninput="updateCharts()">11000, 13000, 15500, 18000, 20500, 23000</textarea>
+                <div class="results">
+                    <div class="r2-display">R²: <span id="r2-inflacion-oferta">...</span></div>
+                    <div class="equation-display" id="eq-inflacion-oferta">P = ...</div>
+                </div>
             </div>
         </div>
 
-        <div class="control-group" id="controls-inflacion-oferta">
-            <h3>2. Oferta (Inflación vs. Precio)</h3>
-            <label>Valores X (Inflación %):</label>
-            <textarea id="x-inflacion-oferta" oninput="updateCharts()">8, 10, 11.5, 11.6, 12, 12.2</textarea>
-            <label>Valores Y (Precio $):</label>
-            <textarea id="y-inflacion-oferta" oninput="updateCharts()">11000, 13000, 15500, 18000, 20500, 23000</textarea>
-            <div class="results">
-                <div class="r2-display">R²: <span id="r2-inflacion-oferta">...</span></div>
-                <div class="equation-display" id="eq-inflacion-oferta">P = ...</div>
-            </div>
-        </div>
-
-        <div class="control-group" id="controls-pib-demanda">
-            <h3>3. Demanda (PIB vs. Precio)</h3>
+        <div class="macro-input-group" id="group-pib">
+            <h3>PIB X (mUM)</h3>
             <label>Valores X (PIB mUM):</label>
-            <textarea id="x-pib-demanda" oninput="updateCharts()">22.1, 14.2, 10.5, 15.2, 13.1, 12</textarea>
-            <label>Valores Y (Precio $):</label>
-            <textarea id="y-pib-demanda" oninput="updateCharts()">14000, 16000, 18500, 20500, 22000, 24000</textarea>
-            <div class="results">
-                <div class="r2-display">R²: <span id="r2-pib-demanda">...</span></div>
-                <div class="equation-display" id="eq-pib-demanda">P = ...</div>
+            <textarea id="x-pib" oninput="updateCharts()">51, 58, 56, 55, 57.6, 60</textarea>
+            
+            <div class="control-group">
+                <h4>3. Demanda (PIB vs. Precio)</h4>
+                <label>Valores Y (Precio $):</label>
+                <textarea id="y-pib-demanda" oninput="updateCharts()">14000, 16000, 18500, 20500, 22000, 24000</textarea>
+                <div class="results">
+                    <div class="r2-display">R²: <span id="r2-pib-demanda">...</span></div>
+                    <div class="equation-display" id="eq-pib-demanda">P = ...</div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h4>4. Oferta (PIB vs. Precio)</h4>
+                <label>Valores Y (Precio $):</label>
+                <textarea id="y-pib-oferta" oninput="updateCharts()">18000, 17500, 17000, 16500, 16000, 15500</textarea>
+                <div class="results">
+                    <div class="r2-display">R²: <span id="r2-pib-oferta">...</span></div>
+                    <div class="equation-display" id="eq-pib-oferta">P = ...</div>
+                </div>
             </div>
         </div>
 
-        <div class="control-group" id="controls-pib-oferta">
-            <h3>4. Oferta (PIB vs. Precio)</h3>
-            <label>Valores X (PIB mUM):</label>
-            <textarea id="x-pib-oferta" oninput="updateCharts()">22.1, 14.2, 10.5, 15.2, 13.1, 12</textarea>
-            <label>Valores Y (Precio $):</label>
-            <textarea id="y-pib-oferta" oninput="updateCharts()">18000, 17500, 17000, 16500, 16000, 15500</textarea>
-            <div class="results">
-                <div class="r2-display">R²: <span id="r2-pib-oferta">...</span></div>
-                <div class="equation-display" id="eq-pib-oferta">P = ...</div>
-            </div>
-        </div>
-
-        <div class="control-group" id="controls-ipc-demanda">
-            <h3>5. Demanda (IPC vs. Precio)</h3>
+        <div class="macro-input-group" id="group-ipc">
+            <h3>IPC X (%)</h3>
             <label>Valores X (IPC %):</label>
-            <textarea id="x-ipc-demanda" oninput="updateCharts()">3, 2.1, 4, 3.4, 3.6, 4.1</textarea>
-            <label>Valores Y (Precio $):</label>
-            <textarea id="y-ipc-demanda" oninput="updateCharts()">13000, 14500, 17000, 19500, 21000, 23500</textarea>
-            <div class="results">
-                <div class="r2-display">R²: <span id="r2-ipc-demanda">...</span></div>
-                <div class="equation-display" id="eq-ipc-demanda">P = ...</div>
+            <textarea id="x-ipc" oninput="updateCharts()">3, 3.4, 3.6, 4.1, 4.2, 4</textarea>
+            
+            <div class="control-group">
+                <h4>5. Demanda (IPC vs. Precio)</h4>
+                <label>Valores Y (Precio $):</label>
+                <textarea id="y-ipc-demanda" oninput="updateCharts()">13000, 14500, 17000, 19500, 21000, 23500</textarea>
+                <div class="results">
+                    <div class="r2-display">R²: <span id="r2-ipc-demanda">...</span></div>
+                    <div class="equation-display" id="eq-ipc-demanda">P = ...</div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h4>6. Oferta (IPC vs. Precio)</h4>
+                <label>Valores Y (Precio $):</label>
+                <textarea id="y-ipc-oferta" oninput="updateCharts()">11500, 14000, 17500, 20000, 22500, 24000</textarea>
+                <div class="results">
+                    <div class="r2-display">R²: <span id="r2-ipc-oferta">...</span></div>
+                    <div class="equation-display" id="eq-ipc-oferta">P = ...</div>
+                </div>
             </div>
         </div>
-
-        <div class="control-group" id="controls-ipc-oferta">
-            <h3>6. Oferta (IPC vs. Precio)</h3>
-            <label>Valores X (IPC %):</label>
-            <textarea id="x-ipc-oferta" oninput="updateCharts()">3, 2.1, 4, 3.4, 3.6, 4.1</textarea>
-            <label>Valores Y (Precio $):</label>
-            <textarea id="y-ipc-oferta" oninput="updateCharts()">11500, 14000, 17500, 20000, 22500, 24000</textarea>
-            <div class="results">
-                <div class="r2-display">R²: <span id="r2-ipc-oferta">...</span></div>
-                <div class="equation-display" id="eq-ipc-oferta">P = ...</div>
-            </div>
-        </div>
-
     </div>
 
     <div class="charts">
@@ -194,15 +211,20 @@
 
 <script>
     const MODEL_KEYS = ['inflacion-demanda', 'inflacion-oferta', 'pib-demanda', 'pib-oferta', 'ipc-demanda', 'ipc-oferta'];
+    const MACRO_KEYS = {
+        'inflacion-demanda': 'x-inflacion', 'inflacion-oferta': 'x-inflacion',
+        'pib-demanda': 'x-pib', 'pib-oferta': 'x-pib',
+        'ipc-demanda': 'x-ipc', 'ipc-oferta': 'x-ipc'
+    };
     let charts = {};
 
     const TITLES = {
-        'inflacion-demanda': '1. Demanda (Inflación vs. Precio)',
-        'inflacion-oferta': '2. Oferta (Inflación vs. Precio)',
-        'pib-demanda': '3. Demanda (PIB vs. Precio)',
-        'pib-oferta': '4. Oferta (PIB vs. Precio)',
-        'ipc-demanda': '5. Demanda (IPC vs. Precio)',
-        'ipc-oferta': '6. Oferta (IPC vs. Precio)'
+        'inflacion-demanda': '1. Demanda (Inflación % vs. Precio)',
+        'inflacion-oferta': '2. Oferta (Inflación % vs. Precio)',
+        'pib-demanda': '3. Demanda (PIB mUM vs. Precio)',
+        'pib-oferta': '4. Oferta (PIB mUM vs. Precio)',
+        'ipc-demanda': '5. Demanda (IPC % vs. Precio)',
+        'ipc-oferta': '6. Oferta (IPC % vs. Precio)'
     };
     
     const AXIS_LABELS = {
@@ -232,7 +254,6 @@
         const denominatorB = sumXX - (sumX * sumX) / n;
 
         if (denominatorB === 0) {
-             // Caso de datos con X constante (no se puede calcular la pendiente)
              return { a: meanY, b: 0, r2: 0, valid: true };
         }
 
@@ -242,8 +263,8 @@
         const a = meanY - b * meanX;
 
         // Cálculo de R²
-        let ssr = 0; // Sum of Squares of Regression (Explicada)
-        let sst = 0; // Total Sum of Squares (Total)
+        let ssr = 0; 
+        let sst = 0; 
 
         for (let i = 0; i < n; i++) {
             const predictedY = a + b * xData[i];
@@ -259,7 +280,6 @@
     // --- 2. FUNCIÓN DE PARSEO DE INPUTS ---
     function parseInput(inputID) {
         const input = document.getElementById(inputID).value;
-        // Limpia el input: reemplaza comas, espacios, saltos de línea y filtra números válidos
         return input.split(/[\s,]+/) 
                     .map(s => parseFloat(s.trim()))
                     .filter(n => !isNaN(n));
@@ -275,14 +295,14 @@
                 type: 'scatter',
                 data: {
                     datasets: [
-                        { // Dataset 0: Puntos de datos (Scatter)
+                        { 
                             label: 'Datos Ingresados',
                             data: [],
                             backgroundColor: 'rgba(52, 152, 219, 0.7)',
                             pointRadius: 6,
                             pointHoverRadius: 8
                         },
-                        { // Dataset 1: Línea de Regresión (Line)
+                        { 
                             label: 'Línea de Regresión',
                             data: [],
                             borderColor: 'rgb(231, 76, 60)',
@@ -314,17 +334,30 @@
                 }
             });
         });
-        updateCharts(); // Llamada inicial para procesar datos por defecto
+        updateCharts(); 
     }
 
     // --- 4. FUNCIÓN DE ACTUALIZACIÓN EN TIEMPO REAL ---
     function updateCharts() {
+        
         MODEL_KEYS.forEach(key => {
-            const xData = parseInput(`x-${key}`);
+            // Obtener la clave del input X macro (e.g., 'x-inflacion')
+            const macroXId = MACRO_KEYS[key]; 
+            const xData = parseInput(macroXId);
             const yData = parseInput(`y-${key}`);
-            
-            const results = calculateRegression(xData, yData);
             const chart = charts[key];
+            
+            // Validar que las cantidades X e Y sean iguales
+            if (xData.length === 0 || xData.length !== yData.length) {
+                chart.data.datasets[0].data = [];
+                chart.data.datasets[1].data = [];
+                chart.update();
+                document.getElementById(`r2-${key}`).textContent = 'ERROR (N ≠ M)';
+                document.getElementById(`eq-${key}`).textContent = 'P = Cantidades X e Y deben ser iguales';
+                return;
+            }
+
+            const results = calculateRegression(xData, yData);
             
             // 1. Preparar datos de dispersión
             const scatterData = xData.map((x, i) => ({ x: x, y: yData[i] }));
@@ -335,10 +368,13 @@
                 const minX = Math.min(...xData);
                 const maxX = Math.max(...xData);
                 
+                const a_fixed = results.a;
+                const b_fixed = results.b;
+
                 // Calcular dos puntos para dibujar la línea
                 const lineData = [
-                    { x: minX, y: results.a + results.b * minX },
-                    { x: maxX, y: results.a + results.b * maxX }
+                    { x: minX, y: a_fixed + b_fixed * minX },
+                    { x: maxX, y: a_fixed + b_fixed * maxX }
                 ];
                 
                 // Ajustar ejes Y dinámicamente
@@ -350,10 +386,10 @@
                 // Actualizar gráfica
                 chart.data.datasets[1].data = lineData;
                 
-                // Actualizar resultados en la interfaz
-                const sign = results.b >= 0 ? '+' : '-';
-                document.getElementById(`r2-${key}`).textContent = results.r2.toFixed(4);
-                document.getElementById(`eq-${key}`).textContent = `P = ${results.a.toFixed(2)} ${sign} ${Math.abs(results.b).toFixed(2)}X`;
+                // 3. Actualizar resultados en la interfaz con formato fijo (3 decimales para a y b)
+                const sign = results.b >= 0 ? '+' : ''; 
+                document.getElementById(`r2-${key}`).textContent = results.r2.toFixed(4); // R² a 4 decimales
+                document.getElementById(`eq-${key}`).textContent = `P = ${a_fixed.toFixed(3)} ${sign} ${b_fixed.toFixed(3)}X`;
 
             } else {
                 // Datos insuficientes o inválidos
