@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis de Regresión Automática Unificada</title>
+    <title>Análisis de Regresión Automática (R²) </title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     <style>
-        /* [El CSS es idéntico al anterior, se omite por brevedad] */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -76,10 +75,6 @@
             border: 1px solid #ccc;
             border-radius: 3px;
         }
-        .global-x-input {
-            background-color: #ecf0f1;
-            border: 2px solid #3498db;
-        }
         .results {
             margin-top: 10px;
             font-size: 0.95em;
@@ -99,23 +94,18 @@
 </head>
 <body>
 
-<h1>Análisis de Regresión Automática para Pronóstico de Precios</h1>
-<p>La variable X (Valores Macroeconómicos/Períodos) es la misma para todas las seis regresiones. Los precios (Y) se ingresan por separado.</p>
+<h1>Análisis de Regresión Automática para Pronóstico</h1>
+<p>Ingrese los valores de la variable macroeconómica (X) y el Precio (Y) separados por comas.</p>
 
 <div class="container">
     
     <div class="controls">
-        
-        <div class="control-group global-x-input">
-            <h3>VALORES X (GLOBAL - Aplica a las 6 gráficas)</h3>
-            <label>Valores X (e.g., Inflación %, Crecimiento PIB %, o Períodos 1, 2, 3...):</label>
-            <textarea id="x-global" oninput="updateCharts()">1, 2, 3, 4, 5, 6</textarea>
-        </div>
-
-        <h2>Ingreso de Precios (Valores Y)</h2>
+        <h2>Ingreso de Nubes de Puntos</h2>
 
         <div class="control-group" id="controls-inflacion-demanda">
-            <h3>1. Demanda (X = Inflación vs. Precio)</h3>
+            <h3>1. Demanda (Inflación vs. Precio)</h3>
+            <label>Valores X (Inflación %):</label>
+            <textarea id="x-inflacion-demanda" oninput="updateCharts()">8, 10, 11.5, 11.6, 12, 12.2</textarea>
             <label>Valores Y (Precio $):</label>
             <textarea id="y-inflacion-demanda" oninput="updateCharts()">12000, 13500, 15000, 16500, 18000, 20000</textarea>
             <div class="results">
@@ -125,7 +115,9 @@
         </div>
 
         <div class="control-group" id="controls-inflacion-oferta">
-            <h3>2. Oferta (X = Inflación vs. Precio)</h3>
+            <h3>2. Oferta (Inflación vs. Precio)</h3>
+            <label>Valores X (Inflación %):</label>
+            <textarea id="x-inflacion-oferta" oninput="updateCharts()">8, 10, 11.5, 11.6, 12, 12.2</textarea>
             <label>Valores Y (Precio $):</label>
             <textarea id="y-inflacion-oferta" oninput="updateCharts()">11000, 13000, 15500, 18000, 20500, 23000</textarea>
             <div class="results">
@@ -135,7 +127,9 @@
         </div>
 
         <div class="control-group" id="controls-pib-demanda">
-            <h3>3. Demanda (X = PIB vs. Precio)</h3>
+            <h3>3. Demanda (PIB vs. Precio)</h3>
+            <label>Valores X (PIB mUM):</label>
+            <textarea id="x-pib-demanda" oninput="updateCharts()">22.1, 14.2, 10.5, 15.2, 13.1, 12</textarea>
             <label>Valores Y (Precio $):</label>
             <textarea id="y-pib-demanda" oninput="updateCharts()">14000, 16000, 18500, 20500, 22000, 24000</textarea>
             <div class="results">
@@ -145,7 +139,9 @@
         </div>
 
         <div class="control-group" id="controls-pib-oferta">
-            <h3>4. Oferta (X = PIB vs. Precio)</h3>
+            <h3>4. Oferta (PIB vs. Precio)</h3>
+            <label>Valores X (PIB mUM):</label>
+            <textarea id="x-pib-oferta" oninput="updateCharts()">22.1, 14.2, 10.5, 15.2, 13.1, 12</textarea>
             <label>Valores Y (Precio $):</label>
             <textarea id="y-pib-oferta" oninput="updateCharts()">18000, 17500, 17000, 16500, 16000, 15500</textarea>
             <div class="results">
@@ -155,7 +151,9 @@
         </div>
 
         <div class="control-group" id="controls-ipc-demanda">
-            <h3>5. Demanda (X = IPC vs. Precio)</h3>
+            <h3>5. Demanda (IPC vs. Precio)</h3>
+            <label>Valores X (IPC %):</label>
+            <textarea id="x-ipc-demanda" oninput="updateCharts()">3, 2.1, 4, 3.4, 3.6, 4.1</textarea>
             <label>Valores Y (Precio $):</label>
             <textarea id="y-ipc-demanda" oninput="updateCharts()">13000, 14500, 17000, 19500, 21000, 23500</textarea>
             <div class="results">
@@ -165,7 +163,9 @@
         </div>
 
         <div class="control-group" id="controls-ipc-oferta">
-            <h3>6. Oferta (X = IPC vs. Precio)</h3>
+            <h3>6. Oferta (IPC vs. Precio)</h3>
+            <label>Valores X (IPC %):</label>
+            <textarea id="x-ipc-oferta" oninput="updateCharts()">3, 2.1, 4, 3.4, 3.6, 4.1</textarea>
             <label>Valores Y (Precio $):</label>
             <textarea id="y-ipc-oferta" oninput="updateCharts()">11500, 14000, 17500, 20000, 22500, 24000</textarea>
             <div class="results">
@@ -207,7 +207,7 @@
     
     const AXIS_LABELS = {
         'inflacion': 'Inflación (%)',
-        'pib': 'PIB (%)',
+        'pib': 'PIB (mUM)',
         'ipc': 'IPC (%)',
         'precio': 'Precio ($ USD)'
     };
@@ -232,6 +232,7 @@
         const denominatorB = sumXX - (sumX * sumX) / n;
 
         if (denominatorB === 0) {
+             // Caso de datos con X constante (no se puede calcular la pendiente)
              return { a: meanY, b: 0, r2: 0, valid: true };
         }
 
@@ -274,14 +275,14 @@
                 type: 'scatter',
                 data: {
                     datasets: [
-                        { 
+                        { // Dataset 0: Puntos de datos (Scatter)
                             label: 'Datos Ingresados',
                             data: [],
                             backgroundColor: 'rgba(52, 152, 219, 0.7)',
                             pointRadius: 6,
                             pointHoverRadius: 8
                         },
-                        { 
+                        { // Dataset 1: Línea de Regresión (Line)
                             label: 'Línea de Regresión',
                             data: [],
                             borderColor: 'rgb(231, 76, 60)',
@@ -318,41 +319,26 @@
 
     // --- 4. FUNCIÓN DE ACTUALIZACIÓN EN TIEMPO REAL ---
     function updateCharts() {
-        const globalXData = parseInput('x-global');
-        
         MODEL_KEYS.forEach(key => {
+            const xData = parseInput(`x-${key}`);
             const yData = parseInput(`y-${key}`);
+            
+            const results = calculateRegression(xData, yData);
             const chart = charts[key];
             
-            // Validar que las cantidades X e Y sean iguales
-            if (globalXData.length === 0 || globalXData.length !== yData.length) {
-                chart.data.datasets[0].data = [];
-                chart.data.datasets[1].data = [];
-                chart.update();
-                document.getElementById(`r2-${key}`).textContent = 'ERROR (N ≠ M)';
-                document.getElementById(`eq-${key}`).textContent = 'P = Cantidades X e Y deben ser iguales';
-                return;
-            }
-
-            const results = calculateRegression(globalXData, yData);
-            
             // 1. Preparar datos de dispersión
-            const scatterData = globalXData.map((x, i) => ({ x: x, y: yData[i] }));
+            const scatterData = xData.map((x, i) => ({ x: x, y: yData[i] }));
             chart.data.datasets[0].data = scatterData;
 
             // 2. Preparar línea de regresión y resultados
-            if (results.valid && globalXData.length >= 2) {
-                const minX = Math.min(...globalXData);
-                const maxX = Math.max(...globalXData);
+            if (results.valid && xData.length >= 2) {
+                const minX = Math.min(...xData);
+                const maxX = Math.max(...xData);
                 
-                // Aplicar redondeo a 3 decimales para a y b
-                const a_fixed = parseFloat(results.a.toFixed(1));
-                const b_fixed = parseFloat(results.b.toFixed(1));
-
                 // Calcular dos puntos para dibujar la línea
                 const lineData = [
-                    { x: minX, y: a_fixed + b_fixed * minX },
-                    { x: maxX, y: a_fixed + b_fixed * maxX }
+                    { x: minX, y: results.a + results.b * minX },
+                    { x: maxX, y: results.a + results.b * maxX }
                 ];
                 
                 // Ajustar ejes Y dinámicamente
@@ -364,10 +350,10 @@
                 // Actualizar gráfica
                 chart.data.datasets[1].data = lineData;
                 
-                // 3. Actualizar resultados en la interfaz con formato fijo
-                const sign = results.b >= 0 ? '+' : ''; 
-                document.getElementById(`r2-${key}`).textContent = results.r2.toFixed(4); // R² a 4 decimales para mayor precisión
-                document.getElementById(`eq-${key}`).textContent = `P = ${a_fixed.toFixed(3)} ${sign} ${b_fixed.toFixed(3)}X`;
+                // Actualizar resultados en la interfaz
+                const sign = results.b >= 0 ? '+' : '-';
+                document.getElementById(`r2-${key}`).textContent = results.r2.toFixed(4);
+                document.getElementById(`eq-${key}`).textContent = `P = ${results.a.toFixed(2)} ${sign} ${Math.abs(results.b).toFixed(2)}X`;
 
             } else {
                 // Datos insuficientes o inválidos
